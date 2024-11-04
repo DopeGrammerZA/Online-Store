@@ -1,0 +1,5 @@
+node_modules
+env
+controllers/authController.js
+routes/authRoutes.js
+config/firebaseKey.json
