@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { fetchProducts } from '../services/api';
-import { Card, Spinner } from 'react-bootstrap';
+import { Card, Spinner, Button } from 'react-bootstrap';
 
 const ProductList = () => {
     const [products, setProducts] = useState([]);
@@ -36,7 +36,14 @@ const ProductList = () => {
                 <Card key={product.id} style={{ width: '18rem', margin: '1rem' }}>
                     <Card.Body>
                         <Card.Title>{product.name}</Card.Title>
-                        <Card.Text>{product.description}</Card.Text>
+                        <Card.Text>
+                            <strong>Description:</strong> {product.description}<br />
+                            <strong>Price:</strong> ${(Number(product.price) || 0).toFixed(2)}<br />
+                            <strong>Size:</strong> {product.size}<br />
+                            <strong>Color:</strong> {product.color}<br />
+                            <strong>Category:</strong> {product.category}
+                        </Card.Text>
+                        <Button variant="primary">Add to Cart</Button>
                     </Card.Body>
                 </Card>
             ))}
