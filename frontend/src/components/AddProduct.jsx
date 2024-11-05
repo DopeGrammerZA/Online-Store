@@ -10,19 +10,32 @@ const AddProduct = () => {
         color: '',
         category: '',
         gender: '',
+        image: null,
     });
     const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        if (e.target.name === 'image') {
+            setFormData({ ...formData, image: e.target.files[0] }); 
+        } else {
+            setFormData({ ...formData, [e.target.name]: e.target.value });
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const token = 'your_auth_token';
-    
+        const token = 'your_auth_token';e
+
+        const formDataToSend = new FormData(); 
+        for (const key in formData) {
+            formDataToSend.append(key, formData[key]);
+        }
+
+        setLoading(true); 
+
         try {
-            await createProduct(formData, token);
+            await createProduct(formDataToSend, token);
             setMessage('Product successfully added!');
             setFormData({
                 name: '',
@@ -31,20 +44,24 @@ const AddProduct = () => {
                 size: '',
                 color: '',
                 category: '',
-                gender: '', 
+                gender: '',
+                image: null,
             });
-        } catch {
+        } catch (error) {
+            console.error("Error adding product:", error);
             setMessage('Failed to add product. Please try again.');
+        } finally {
+            setLoading(false); 
         }
-    
+
         setTimeout(() => setMessage(''), 3000);
     };
-    
+
     return (
         <div className="container mt-5">
             <h2>Add New Product</h2>
             {message && <div className="alert alert-info">{message}</div>}
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} encType="multipart/form-data">
                 <div className="mb-3">
                     <label className="form-label">Name</label>
                     <input
@@ -139,8 +156,20 @@ const AddProduct = () => {
                         <option value="Skirts">Skirts</option>
                     </select>
                 </div>
-
-                <button type="submit" className="btn btn-success">Add Product</button>
+                <div className="mb-3">
+                    <label className="form-label">Upload Image</label>
+                    <input
+                        type="file"
+                        name="image"
+                        className="form-control"
+                        accept="image/*"
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <button type="submit" className="btn btn-primary" disabled={loading}>       
+                    {loading ? 'Adding...' : 'Add Product'}
+                </button>
             </form>
         </div>
     );

@@ -1,0 +1,29 @@
+.navbar-custom {
+    background-color: #f8f9fa; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    margin-right: 15px;
+    color: #333; 
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: #007bff;
+}
+
+.search-bar {
+    width: 300px;
+    border: 1px solid #ced4da; 
+    border-radius: 4px;
+}
+
+.btn-search {
+    margin-left: 5px;
+}

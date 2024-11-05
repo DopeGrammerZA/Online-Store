@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchProducts } from '../services/api';
 import { Card, Spinner, Button, Form } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 const ProductList = () => {
     const [products, setProducts] = useState([]);
@@ -55,13 +56,15 @@ const ProductList = () => {
                             <Card.Title>{product.name}</Card.Title>
                             <Card.Text>
                                 <strong>Description:</strong> {product.description}<br />
-                                <strong>Price:</strong> ${(Number(product.price) || 0).toFixed(2)}<br />
+                                <strong>Price:</strong> R {(Number(product.price) || 0).toFixed(2)}<br />
                                 <strong>Size:</strong> {product.size}<br />
                                 <strong>Color:</strong> {product.color}<br />
                                 <strong>Gender:</strong> {product.gender}<br />
                                 <strong>Category:</strong> {product.category}
                             </Card.Text>
-                            <Button variant="primary">Add to Cart</Button>
+                            <Link to={`/productDetails/${product.id}`}>
+                                <Button variant="primary">View Details</Button>
+                            </Link>
                         </Card.Body>
                     </Card>
                 ))}

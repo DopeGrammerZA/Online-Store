@@ -1,0 +1,77 @@
+.register-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f4f7fa;
+}
+
+.register-title {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem; 
+    color: #333;
+}
+
+.register-form {
+    background-color: #fff;
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    max-width: 90%; 
+}
+
+.form-group {
+    margin-bottom: 1.5rem; 
+}
+
+.form-control {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 12px; 
+    font-size: 1.1rem; 
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    width: 100%;
+    padding: 12px; 
+    border-radius: 4px;
+    font-size: 1.1rem; 
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-link {
+    margin-top: 0.5rem; 
+    color: #007bff;
+    text-decoration: none;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+.register-message {
+    margin-top: 1.5rem; 
+    color: #dc3545;
+    font-size: 1rem; 
+}
+
+.text-success {
+    color: #28a745; 
+}
+
+.text-danger {
+    color: #dc3545; 
+}

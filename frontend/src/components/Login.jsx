@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import './styles/Login.css';
 
 const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
@@ -21,30 +22,33 @@ const Login = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="p-3">
-            <div className="form-group">
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    onChange={handleChange}
-                    className="form-control mb-3"
-                    required
-                />
-            </div>
-            <div className="form-group">
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    onChange={handleChange}
-                    className="form-control mb-3"
-                    required
-                />
-            </div>
-            <button type="submit" className="btn btn-primary">Login</button>
-            {message && <p>{message}</p>}
-        </form>
+        <div className="login-container">
+            <h2 className="login-title">Login</h2>
+            <form onSubmit={handleSubmit} className="login-form">
+                <div className="form-group">
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        onChange={handleChange}
+                        className="form-control mb-3"
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        onChange={handleChange}
+                        className="form-control mb-3"
+                        required
+                    />
+                </div>
+                <button type="submit" className="btn btn-primary">Login</button>
+                {message && <p className="login-message">{message}</p>}
+            </form>
+        </div>
     );
 };
 

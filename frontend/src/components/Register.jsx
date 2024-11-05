@@ -5,7 +5,7 @@ const Register = () => {
     const [formData, setFormData] = useState({ email: '', password: '', username: '' });
     const [message, setMessage] = useState('');
     const [isError, setIsError] = useState(false);
-    const [loading, setLoading] = useState(false); // Loading state
+    const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
     const handleChange = (e) => {
