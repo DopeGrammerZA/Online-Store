@@ -1,14 +1,9 @@
 const db = require('../firebase');
-const { body, validationResult } = require('express-validator');
+const { validationResult } = require('express-validator');
+const { validateProduct } = require('../middlewares/validation');
 
 exports.createProduct = [
-    body('name').isString().notEmpty().withMessage('Name is required'),
-    body('description').isString().notEmpty().withMessage('Description is required'),
-    body('price').isNumeric().withMessage('Price must be a number'),
-    body('size').isString().notEmpty().withMessage('Size is required'),
-    body('color').isString().notEmpty().withMessage('Color is required'),
-    body('category').isString().notEmpty().withMessage('Category is required'),
-
+    validateProduct,
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -29,23 +24,35 @@ exports.createProduct = [
             });
             res.status(201).json({ id: productRef.id, name, description, price, size, color, category, available: true });
         } catch (error) {
-            res.status(400).json({ message: error.message });
+            res.status(500).json({ message: 'Failed to create product', error: error.message });
         }
     }
 ];
 
+
 exports.getAllProducts = async (req, res) => {
+    const limit = parseInt(req.query.limit) || 10;
+    const lastDocId = req.query.lastDocId || null;
+
     try {
-        const productsSnapshot = await db.collection('products').get();
-        const products = productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        let productsRef = db.collection('products').limit(limit);
+
+        if (lastDocId) {
+            const lastDoc = await db.collection('products').doc(lastDocId).get();
+            productsRef = productsRef.startAfter(lastDoc);
+        }
+
+        const snapshot = await productsRef.get();
+        const products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
         res.json(products);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Failed to fetch products', error: error.message });
     }
 };
 
-
 exports.updateProduct = [
+    validateProduct.map((validation) => validation.optional()), 
     async (req, res) => {
         const { id } = req.params;
         const errors = validationResult(req);
@@ -54,10 +61,26 @@ exports.updateProduct = [
         }
 
         try {
-            await db.collection('products').doc(id).update(req.body);
-            res.json({ message: 'Product updated' });
+            const productRef = db.collection('products').doc(id);
+            const product = await productRef.get();
+
+            if (!product.exists) {
+                return res.status(404).json({ message: 'Product not found' });
+            }
+
+            const updates = {};
+            if (req.body.name) updates.name = req.body.name;
+            if (req.body.description) updates.description = req.body.description;
+            if (req.body.price) updates.price = req.body.price;
+            if (req.body.size) updates.size = req.body.size;
+            if (req.body.color) updates.color = req.body.color;
+            if (req.body.category) updates.category = req.body.category;
+            if (req.body.available !== undefined) updates.available = req.body.available;
+
+            await productRef.update(updates);
+            res.json({ message: 'Product updated successfully' });
         } catch (error) {
-            res.status(400).json({ message: error.message });
+            res.status(500).json({ message: 'Failed to update product', error: error.message });
         }
     }
 ];
@@ -65,9 +88,16 @@ exports.updateProduct = [
 exports.deleteProduct = async (req, res) => {
     const { id } = req.params;
     try {
-        await db.collection('products').doc(id).delete();
-        res.json({ message: 'Product deleted' });
+        const productRef = db.collection('products').doc(id);
+        const product = await productRef.get();
+
+        if (!product.exists) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        await productRef.delete();
+        res.json({ message: 'Product deleted successfully' });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Failed to delete product', error: error.message });
     }
 };
