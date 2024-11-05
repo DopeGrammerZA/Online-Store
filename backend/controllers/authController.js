@@ -1,5 +1,8 @@
 const admin = require('firebase-admin');
+const jwt = require('jsonwebtoken');
 const db = require('../firebase.js');
+
+const JWT_SECRET = process.env.JWT_SECRET || 'ThisIsMyPassword'; 
 
 exports.register = async (req, res) => {
     const { username, email, password } = req.body;
@@ -22,11 +25,16 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-    const { email, password } = req.body;     
+    const { email, password } = req.body;
     try {
         const userRecord = await admin.auth().getUserByEmail(email);
+        const token = jwt.sign({ uid: userRecord.uid, email: userRecord.email }, JWT_SECRET, {
+            expiresIn: '1h',
+        });
+
         res.json({
             message: 'Login successful',
+            token,
             user: { uid: userRecord.uid, username: userRecord.displayName, email: userRecord.email },
         });
     } catch (error) {

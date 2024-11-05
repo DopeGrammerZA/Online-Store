@@ -4,6 +4,9 @@ import axios from 'axios';
 const Register = () => {
     const [formData, setFormData] = useState({ email: '', password: '', username: '' });
     const [message, setMessage] = useState('');
+    const [isError, setIsError] = useState(false);
+    const [loading, setLoading] = useState(false); // Loading state
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -11,13 +14,18 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setMessage('');
+        setIsError(false);
+        setLoading(true); 
+
         try {
-            
             const response = await axios.post('http://localhost:5000/api/auth/register', formData);
             setMessage(response.data.message);
         } catch (error) {
-            
+            setIsError(true);
             setMessage(`Registration failed: ${error.response?.data?.message || error.message}`);
+        } finally {
+            setLoading(false); 
         }
     };
 
@@ -45,16 +53,27 @@ const Register = () => {
             </div>
             <div className="form-group">
                 <input
-                    type="password"
+                    type={showPassword ? 'text' : 'password'} 
                     name="password"
                     placeholder="Password"
                     onChange={handleChange}
                     className="form-control mb-3"
                     required
                 />
+                <button
+                    type="button"
+                    className="btn btn-link"
+                    onClick={() => setShowPassword(!showPassword)}
+                >
+                    {showPassword ? 'Hide' : 'Show'} Password
+                </button>
             </div>
-            <button type="submit" className="btn btn-primary">Register</button>
-            {message && <p>{message}</p>}
+            <button type="submit" className="btn btn-primary" disabled={loading}>
+                {loading ? 'Registering...' : 'Register'} 
+            </button>
+            {message && (
+                <p className={isError ? 'text-danger' : 'text-success'}>{message}</p>
+            )}
         </form>
     );
 };
