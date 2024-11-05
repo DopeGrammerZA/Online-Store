@@ -11,7 +11,7 @@ exports.createProduct = [
         }
 
         try {
-            const { name, description, price, size, color, category } = req.body;
+            const { name, description, price, size, color, category, gender } = req.body;
             const productRef = db.collection('products').doc();
             await productRef.set({
                 name,
@@ -20,6 +20,7 @@ exports.createProduct = [
                 size,
                 color,
                 category,
+                gender,
                 available: true,
             });
             res.status(201).json({ id: productRef.id, name, description, price, size, color, category, available: true });
