@@ -1,4 +1,4 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import { createProduct } from '../services/api';
 
 const AddProduct = () => {
@@ -10,6 +10,7 @@ const AddProduct = () => {
         color: '',
         category: '',
     });
+    const [message, setMessage] = useState('');
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,38 +18,96 @@ const AddProduct = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const token = 'your_auth_token'; 
-        await createProduct(formData, token);
-        // Optionally reset the form or redirect
+        const token = 'your_auth_token';
+    
+        try {
+            await createProduct(formData, token);
+            setMessage('Product successfully added!');
+            setFormData({
+                name: '',
+                description: '',
+                price: '',
+                size: '',
+                color: '',
+                category: '',
+            });
+        } catch {
+            setMessage('Failed to add product. Please try again.');
+        }
+    
+        setTimeout(() => setMessage(''), 3000);
     };
+    
 
     return (
         <div className="container mt-5">
             <h2>Add New Product</h2>
+            {message && <div className="alert alert-info">{message}</div>}
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label className="form-label">Name</label>
-                    <input type="text" name="name" className="form-control" onChange={handleChange} required />
+                    <input
+                        type="text"
+                        name="name"
+                        className="form-control"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                    />
                 </div>
                 <div className="mb-3">
                     <label className="form-label">Description</label>
-                    <textarea name="description" className="form-control" onChange={handleChange} required></textarea>
+                    <textarea
+                        name="description"
+                        className="form-control"
+                        value={formData.description}
+                        onChange={handleChange}
+                        required
+                    ></textarea>
                 </div>
                 <div className="mb-3">
                     <label className="form-label">Price</label>
-                    <input type="number" name="price" className="form-control" onChange={handleChange} required />
+                    <input
+                        type="number"
+                        name="price"
+                        className="form-control"
+                        value={formData.price}
+                        onChange={handleChange}
+                        required
+                    />
                 </div>
                 <div className="mb-3">
                     <label className="form-label">Size</label>
-                    <input type="text" name="size" className="form-control" onChange={handleChange} required />
+                    <input
+                        type="text"
+                        name="size"
+                        className="form-control"
+                        value={formData.size}
+                        onChange={handleChange}
+                        required
+                    />
                 </div>
                 <div className="mb-3">
                     <label className="form-label">Color</label>
-                    <input type="text" name="color" className="form-control" onChange={handleChange} required />
+                    <input
+                        type="text"
+                        name="color"
+                        className="form-control"
+                        value={formData.color}
+                        onChange={handleChange}
+                        required
+                    />
                 </div>
                 <div className="mb-3">
                     <label className="form-label">Category</label>
-                    <input type="text" name="category" className="form-control" onChange={handleChange} required />
+                    <input
+                        type="text"
+                        name="category"
+                        className="form-control"
+                        value={formData.category}
+                        onChange={handleChange}
+                        required
+                    />
                 </div>
                 <button type="submit" className="btn btn-success">Add Product</button>
             </form>
