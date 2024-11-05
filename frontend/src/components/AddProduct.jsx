@@ -9,6 +9,7 @@ const AddProduct = () => {
         size: '',
         color: '',
         category: '',
+        gender: '',
     });
     const [message, setMessage] = useState('');
 
@@ -30,6 +31,7 @@ const AddProduct = () => {
                 size: '',
                 color: '',
                 category: '',
+                gender: '', 
             });
         } catch {
             setMessage('Failed to add product. Please try again.');
@@ -38,7 +40,6 @@ const AddProduct = () => {
         setTimeout(() => setMessage(''), 3000);
     };
     
-
     return (
         <div className="container mt-5">
             <h2>Add New Product</h2>
@@ -78,14 +79,21 @@ const AddProduct = () => {
                 </div>
                 <div className="mb-3">
                     <label className="form-label">Size</label>
-                    <input
-                        type="text"
+                    <select
                         name="size"
-                        className="form-control"
+                        className="form-select"
                         value={formData.size}
                         onChange={handleChange}
                         required
-                    />
+                    >
+                        <option value="">Select Size</option>
+                        <option value="XS">XS</option>
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                        <option value="XXL">XXL</option>
+                    </select>
                 </div>
                 <div className="mb-3">
                     <label className="form-label">Color</label>
@@ -99,16 +107,39 @@ const AddProduct = () => {
                     />
                 </div>
                 <div className="mb-3">
+                    <label className="form-label">Gender</label>
+                    <select
+                        name="gender"
+                        className="form-select"
+                        value={formData.gender}
+                        onChange={handleChange}
+                        required
+                    >
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div className="mb-3">
                     <label className="form-label">Category</label>
-                    <input
-                        type="text"
+                    <select
                         name="category"
-                        className="form-control"
+                        className="form-select"
                         value={formData.category}
                         onChange={handleChange}
                         required
-                    />
+                    >
+                        <option value="">Select Category</option>
+                        <option value="T-Shirts">T-Shirts</option>
+                        <option value="Hoodies">Hoodies</option>
+                        <option value="Jeans">Jeans</option>
+                        <option value="Jackets">Jackets</option>
+                        <option value="Dresses">Dresses</option>
+                        <option value="Shorts">Shorts</option>
+                        <option value="Skirts">Skirts</option>
+                    </select>
                 </div>
+
                 <button type="submit" className="btn btn-success">Add Product</button>
             </form>
         </div>
