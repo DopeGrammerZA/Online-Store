@@ -20,4 +20,4 @@ export const createProduct = async (productData) => {
         console.error('Error creating product:', error);
         throw error; 
     }
-};
+};  

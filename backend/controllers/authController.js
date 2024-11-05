@@ -1,7 +1,6 @@
 const admin = require('firebase-admin');
 const db = require('../firebase.js');
 
-
 exports.register = async (req, res) => {
     const { username, email, password } = req.body;
     try {
@@ -9,6 +8,11 @@ exports.register = async (req, res) => {
             email,
             password,
             displayName: username,
+        });
+        await db.collection('users').doc(userRecord.uid).set({
+            username,
+            email,
+            createdAt: new Date().toISOString(),
         });
 
         res.status(201).json({ message: 'User registered successfully', user: userRecord });
@@ -18,7 +22,7 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-    const { email } = req.body; 
+    const { email, password } = req.body;     
     try {
         const userRecord = await admin.auth().getUserByEmail(email);
         res.json({
