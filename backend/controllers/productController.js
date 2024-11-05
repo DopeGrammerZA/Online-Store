@@ -29,7 +29,6 @@ exports.createProduct = [
     }
 ];
 
-
 exports.getAllProducts = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const lastDocId = req.query.lastDocId || null;
@@ -50,6 +49,23 @@ exports.getAllProducts = async (req, res) => {
         res.status(500).json({ message: 'Failed to fetch products', error: error.message });
     }
 };
+
+exports.getProductById = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const productRef = db.collection('products').doc(id);
+        const product = await productRef.get();
+
+        if (!product.exists) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        res.json({ id: product.id, ...product.data() });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to fetch product', error: error.message });
+    }
+};
+
 
 exports.updateProduct = [
     validateProduct.map((validation) => validation.optional()), 
@@ -101,3 +117,5 @@ exports.deleteProduct = async (req, res) => {
         res.status(500).json({ message: 'Failed to delete product', error: error.message });
     }
 };
+
+
